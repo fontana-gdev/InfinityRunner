@@ -24,18 +24,30 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        // Can be used on Update, because that's just one time event each key press
-        if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
+        // Can be used on Update, because that's just one time event each key press and doesn't involve physics
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            rig.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-            isJumping = true;
-            animator.SetBool("jumping", true);
+            Jump();
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            Instantiate(bulletPrefab, shotPoint.position, shotPoint.rotation);
-        }
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     Shoot();
+        // }
+    }
+    
+    public void Jump()
+    {
+        if (isJumping) return;
+        
+        rig.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+        isJumping = true;
+        animator.SetBool("jumping", true);
+    }
+
+    public void Shoot()
+    {
+        Instantiate(bulletPrefab, shotPoint.position, shotPoint.rotation);
     }
 
     // Update is called once per frame
@@ -47,6 +59,7 @@ public class Player : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
+        Debug.Log("Damage: " + damage + " / Health: " + health);
         if (health <= 0)
         {
             GameManager.instance.ShowGameOver();
@@ -66,10 +79,14 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("Bomb"))
         {
-            TakeDamage(other.GetComponent<BombControl>().Damage);
+            // Debug.Log("Player took damage from: " + other.name);
+            var bombControl = other.GetComponent<BombControl>();
+            TakeDamage(bombControl.Damage);
+            bombControl.Explode();
         }
         else if (other.CompareTag("Enemy"))
         {
+            // Debug.Log("Player took damage from: " + other.name);
             TakeDamage(other.GetComponent<Enemy>().Damage);
         }
     }

@@ -136,7 +136,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizontalForce: 4
   verticalForce: 6
-  damage: 0
+  damage: 2
+  impactEffect: {fileID: 5794744905670434934, guid: d45bd53a1dd6ff547a61c86c49514ed9, type: 3}
 --- !u!50 &4636995746916341688
 Rigidbody2D:
   serializedVersion: 4
